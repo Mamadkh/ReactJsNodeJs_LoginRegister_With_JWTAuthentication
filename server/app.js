@@ -4,8 +4,20 @@ var cookieParser = require("cookie-parser")
 app.use(express.json())
 app.use(cookieParser())
 
+app.use(function (req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
+    next();
+});
+
+
+
+app.use(express.urlencoded({extends: true}))
+
 app.get('/test',(req, res)=>{
-    res.send({'result':' Test is Ok'})
+    console.log('Test is Ok')
+    return res.send({'result':' Test is Ok'})
 })
 
 // app.get('/writecookie',(req, res)=>{
@@ -18,9 +30,15 @@ app.get('/test',(req, res)=>{
 // })
 
 ////////////////////// Authenticate ////////////////////////////////
-const {Login} = require("./controllers/authenticate")
+const {Login , TestJwt} = require("./controllers/authenticate")
 app.post('/Login', Login)
+app.get('/TestJwt', TestJwt)
+
 /////////////////////////////////////////////////////
+
+
+
+
 
 app.listen(3500 , ()=>{
     console.log('connected to port 3500')
