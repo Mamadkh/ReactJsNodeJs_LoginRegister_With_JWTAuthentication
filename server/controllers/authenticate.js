@@ -1,11 +1,13 @@
 
 const jwt = require('jsonwebtoken')
 const jwtKey = "1qazxsw23edcvfr4"
-const jwtExpirySeconds = 60; //one minnute
+const jwtExpirySeconds = 60; //one minute
 
 const Login = (req, res) => {
 
     const { username, password } = req.body
+    // let username = req.body.username
+    // let password = req.body.password
     console.log(username, password)
 
 
@@ -43,9 +45,9 @@ const VarifyIsSigninedWithJWT = (req)=>{
     return {result: false , payload: null}
 }
 
-const TestJwt = (req, res) => {
+const TestJwtWithCookie = (req, res) => {
     const signin = VarifyIsSigninedWithJWT(req)
-    if(!signin.result) {
+    if(signin.result == false) {
         console.log('Error, signin')
         return  res.send({result:'Error, Login First.'}) //res.status(401).end()
     }
@@ -53,8 +55,16 @@ const TestJwt = (req, res) => {
     return res.send({result:'Successfully....!'})
 }
 
+const TestJwtWithFetchBearer = (req,res)=>{
+    console.log('TestJwtWithFetchBearer')
+    let {a,b} = req.body
+    console.log(a,b)
+    console.log(req.headers)
+    console.log(req.headers.Authorization)
+}
 
 module.exports = {
     Login,
-    TestJwt
+    TestJwtWithCookie,
+    TestJwtWithFetchBearer
 }

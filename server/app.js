@@ -6,7 +6,7 @@ app.use(cookieParser())
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept,Authorization");
     res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
     next();
 });
@@ -30,9 +30,10 @@ app.get('/test',(req, res)=>{
 // })
 
 ////////////////////// Authenticate ////////////////////////////////
-const {Login , TestJwt} = require("./controllers/authenticate")
+const { Login , TestJwtWithCookie ,TestJwtWithFetchBearer } = require("./controllers/authenticate")
 app.post('/Login', Login)
-app.get('/TestJwt', TestJwt)
+app.get('/TestJwtWithCookie', TestJwtWithCookie)
+app.post('/TestJwtWithFetchBearer', TestJwtWithFetchBearer)
 
 /////////////////////////////////////////////////////
 
