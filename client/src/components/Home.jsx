@@ -1,26 +1,39 @@
-
+import {useNavigate} from 'react-router-dom'
 
 const Home = () => {
+let navigate = useNavigate();
+
     function CallApiCookieJWT() {
-        fetch('/TestJwtWithCookie').then(x=>x.json())
-        .then(x=>{
-            alert(JSON.stringify(x))
-        })
+        fetch('/TestJwtWithCookie')
+            .then(x => { //get status of webapi
+                if (!x.ok) {
+                    //alert(x.status)
+                    if (x.status === 401 || x.status === 402){
+                        alert('UnAthenticated, Login first')
+                        navigate('/Login')        
+                    }
+                }
+                else return x.json()
+            })
+            .then(x => { //get result data
+                if (x)
+                    alert(JSON.stringify(x))
+            })
     }
-    function CallApiWithFetchBearer(){
+    function CallApiWithFetchBearer() {
         let jwt = localStorage.jwt
         alert(jwt)
-        fetch('/TestJwtWithFetchBearer',{
+        fetch('/TestJwtWithFetchBearer', {
             method: 'POST',
-            mode:'no-cors',
-            headers:{
+            mode: 'no-cors',
+            headers: new Headers( {
                 'Content-Type': 'application/json',
                 'Accept': 'application/json',
                 'Authorization': `Bearer ${jwt}`,
-             
-            },
+
+            }),
             //credentials: 'same-origin',
-            body: JSON.stringify({a:10,b:20})
+            //body: JSON.stringify({ a: 10, b: 20 })
         })
     }
     return (
