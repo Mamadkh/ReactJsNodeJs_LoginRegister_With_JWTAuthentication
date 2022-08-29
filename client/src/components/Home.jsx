@@ -1,16 +1,16 @@
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 const Home = () => {
-let navigate = useNavigate();
+    let navigate = useNavigate();
 
     function CallApiCookieJWT() {
         fetch('/TestJwtWithCookie')
             .then(x => { //get status of webapi
                 if (!x.ok) {
                     //alert(x.status)
-                    if (x.status === 401 || x.status === 402){
+                    if (x.status === 401 || x.status === 402) {
                         alert('UnAthenticated, Login first')
-                        navigate('/Login')        
+                        navigate('/Login')
                     }
                 }
                 else return x.json()
@@ -23,17 +23,27 @@ let navigate = useNavigate();
     function CallApiWithFetchBearer() {
         let jwt = localStorage.jwt
         alert(jwt)
+        let httpHeaders = {
+            'Content-Type': 'application/json', //x-www-form-urlencoded',
+            'Accept': 'application/json',
+            'Authorization': `Bearer ${jwt}`
+        };
         fetch('/TestJwtWithFetchBearer', {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: new Headers( {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-                'Authorization': `Bearer ${jwt}`,
-
-            }),
+            method: 'post',
+            //mode: 'no-cors',
+            headers: new Headers(httpHeaders),
             //credentials: 'same-origin',
-            //body: JSON.stringify({ a: 10, b: 20 })
+            body: JSON.stringify({ a: 10, b: 20 })
+        }).then(x => {
+            if (!x.ok) {
+                if (x.status === 401) {
+                    alert("You are not allowed to call this Api. Login first")
+                    navigate('/login')
+                }
+            }
+            return x.json()
+        }).then(x => {
+            alert(JSON.stringify(x))
         })
     }
     return (

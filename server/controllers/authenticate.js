@@ -1,7 +1,7 @@
 
 const jwt = require('jsonwebtoken')
 const jwtKey = "1qazxsw23edcvfr4"
-const jwtExpirySeconds = 60; //one minute
+const jwtExpirySeconds = 60; //one minute or 60 seconds
 
 const Login = (req, res) => {
 
@@ -25,8 +25,8 @@ const Login = (req, res) => {
     }
 }
 
-const VarifyIsSigninedWithJWT = (req) => {    
-    
+const VarifyIsSigninedWithJWT = (req) => {
+
     const token = req.cookies.mohammadpourtoken
     console.log('Token: ', token)
     if (token === undefined) {
@@ -67,15 +67,26 @@ const TestJwtWithCookie = (req, res) => {
     }
     console.log(signin)
     res.status(200) //ok
-    return res.send({ result: 'Successfully....!' })
+    return res.send({ result: 'Successfully....!' , payload })
 }
 
 const TestJwtWithFetchBearer = (req, res) => {
     console.log('TestJwtWithFetchBearer')
-    //let { a, b } = req.body
-    //console.log(a, b)
-    console.log(req.headers)
-    console.log(req.headers.Authorization)
+    let { a, b } = req.body
+    console.log(a, b)
+    let token = req.headers['authorization'].replace('Bearer ', '')
+    console.log(token)
+    let payload = null
+    try{
+        payload = jwt.verify(token , jwtKey)
+        console.log(payload)
+    }catch{
+        console.log('Error on JWT Token')
+         res.status(401)
+         return res.send({result:""})
+    }
+    return res.send({result: 'You are allowed to use this Api with Bearer JWT', payload})
+
 }
 
 module.exports = {
